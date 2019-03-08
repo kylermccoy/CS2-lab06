@@ -120,9 +120,14 @@ public class ObstacleCourse {
      * @param woolie the Woolie who wants to cross the obstacle course
      */
     public synchronized void enter(Woolie woolie) {
+
         System.out.println("WOOLIE: " + woolie + " enters line");
 
         // TODO
+        while(numOnCourse >= maxOnCourse){
+            try{wait();}catch(InterruptedException ex){ex.printStackTrace();}
+        }
+        numOnCourse++ ;
 
         System.out.println("WOOLIE: " + woolie + " enters course");
     }
@@ -139,6 +144,8 @@ public class ObstacleCourse {
     public synchronized void leave(Woolie woolie) {
 
         // TODO
+        numOnCourse-- ;
+        notifyAll();
 
         System.out.println("WOOLIE: " + woolie + " leaves course");
     }

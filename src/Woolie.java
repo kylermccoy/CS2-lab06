@@ -59,7 +59,13 @@ public class Woolie extends Thread {
     public Woolie(int id, ObstacleCourse obstacleCourse, Kraken kraken) {
 
         // TODO
-
+        this.id = id ;
+        this.obstacleCourse = obstacleCourse ;
+        this.kraken = kraken ;
+        this.totalCrossingTime = WoolieWipeout.nextInt(MIN_CROSSING_TIME, MAX_CROSSING_TIME) ;
+        this.preserver = Optional.empty() ;
+        this.crossingTimeRemaining = this.totalCrossingTime ;
+        this.timesFallen = 0 ;
     }
 
     /**
@@ -127,6 +133,14 @@ public class Woolie extends Thread {
     public void run()  {
 
         // TODO
+        this.obstacleCourse.enter(this) ;
+        while(this.crossingTimeRemaining != 0){
+            System.out.println("WOOLIE: " + this +" crossing course...") ;
+            this.crossingTimeRemaining-- ;
+            try{sleep(SLEEP_TIME) ;}
+            catch(InterruptedException ex){ex.printStackTrace();}
+        }
+        this.obstacleCourse.leave(this) ;
 
         System.out.println("\tWOOLIE:" + this + " finishes course!");
     }
