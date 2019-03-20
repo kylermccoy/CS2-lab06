@@ -144,6 +144,7 @@ public class Woolie extends Thread {
                 this.obstacleCourse.enter(this) ;
                 this.preserver = Optional.of(this.kraken.getPreserver(this)) ;
             }else{
+                try{sleep(SLEEP_TIME);}catch(InterruptedException ex){ex.printStackTrace();}
                 if(this.preserver.isPresent()){
                     this.preserver.get().use();
                 }
@@ -161,7 +162,6 @@ public class Woolie extends Thread {
                 }else{
                     System.out.println("WOOLIE:" + this + " crossing course...") ;
                     this.crossingTimeRemaining-- ;
-                    try{sleep(SLEEP_TIME);}catch(InterruptedException ex){ex.printStackTrace();}
                 }
             }
         }
