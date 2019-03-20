@@ -6,7 +6,7 @@ import java.util.Optional;
  * else on the course, falling.
  *
  * @author Sean Strout @ RIT CS
- * @author YOUR NAME HERE
+ * @author Kyle McCoy
  */
 public class Woolie extends Thread {
     /** The minimum amount of time it takes a woolie to cross the obstacle
@@ -134,13 +134,41 @@ public class Woolie extends Thread {
 
         // TODO
         this.obstacleCourse.enter(this) ;
+        this.preserver = Optional.of(this.kraken.getPreserver(this)) ;
         while(this.crossingTimeRemaining != 0){
-            System.out.println("WOOLIE: " + this +" crossing course...") ;
-            this.crossingTimeRemaining-- ;
-            try{sleep(SLEEP_TIME) ;}
-            catch(InterruptedException ex){ex.printStackTrace();}
+            if(this.obstacleCourse.hasWoolieFallen()){
+                this.obstacleCourse.leave(this) ;
+                this.crossingTimeRemaining = this.totalCrossingTime ;
+                this.kraken.returnPreserver(this) ;
+                this.preserver = Optional.empty() ;
+                this.obstacleCourse.enter(this) ;
+                this.preserver = Optional.of(this.kraken.getPreserver(this)) ;
+            }else{
+                int chance = WoolieWipeout.nextInt(0, 100) ;
+                if(chance <= CHANCE_TO_FALL){
+                    System.out.println("\tWOOLIE:" + this + " fell off the course!") ;
+                    this.obstacleCourse.fallOff() ;
+                    this.timesFallen++ ;
+                    this.crossingTimeRemaining = this.totalCrossingTime ;
+                    this.obstacleCourse.leave(this) ;
+                    this.kraken.returnPreserver(this) ;
+                    this.preserver = Optional.empty() ;
+                    this.obstacleCourse.enter(this) ;
+                    this.preserver = Optional.of(this.kraken.getPreserver(this)) ;
+                }else{
+                    System.out.println("WOOLIE:" + this + " crossing course...") ;
+                    this.crossingTimeRemaining-- ;
+                    try{sleep(SLEEP_TIME);}catch(InterruptedException ex){ex.printStackTrace();}
+                }
+                if(this.preserver.isPresent()){
+                    this.preserver.get().use();
+                }
+
+            }
         }
         this.obstacleCourse.leave(this) ;
+        this.kraken.returnPreserver(this) ;
+        this.preserver = Optional.empty() ;
 
         System.out.println("\tWOOLIE:" + this + " finishes course!");
     }

@@ -124,9 +124,15 @@ public class ObstacleCourse {
         System.out.println("WOOLIE: " + woolie + " enters line");
 
         // TODO
-        while(numOnCourse >= maxOnCourse){
-            try{wait();}catch(InterruptedException ex){ex.printStackTrace();}
+        this.waitingLine.add(woolie) ;
+        if((numOnCourse >= maxOnCourse) || (!this.isRunning()) || (!this.waitingLine.get(0).equals(woolie)) || (this.fallenWoolie)){
+            try{
+                wait();
+            }catch(InterruptedException ex){
+                ex.printStackTrace();
+            }
         }
+        this.waitingLine.remove(0) ;
         numOnCourse++ ;
 
         System.out.println("WOOLIE: " + woolie + " enters course");
