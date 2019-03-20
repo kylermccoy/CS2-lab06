@@ -136,7 +136,7 @@ public class Woolie extends Thread {
         this.obstacleCourse.enter(this) ;
         this.preserver = Optional.of(this.kraken.getPreserver(this)) ;
         while(this.crossingTimeRemaining != 0){
-            if(this.obstacleCourse.hasWoolieFallen()){
+            if(!this.obstacleCourse.isRunning()){
                 this.obstacleCourse.leave(this) ;
                 this.crossingTimeRemaining = this.totalCrossingTime ;
                 this.kraken.returnPreserver(this) ;
@@ -144,6 +144,9 @@ public class Woolie extends Thread {
                 this.obstacleCourse.enter(this) ;
                 this.preserver = Optional.of(this.kraken.getPreserver(this)) ;
             }else{
+                if(this.preserver.isPresent()){
+                    this.preserver.get().use();
+                }
                 int chance = WoolieWipeout.nextInt(0, 100) ;
                 if(chance <= CHANCE_TO_FALL){
                     System.out.println("\tWOOLIE:" + this + " fell off the course!") ;
@@ -160,10 +163,6 @@ public class Woolie extends Thread {
                     this.crossingTimeRemaining-- ;
                     try{sleep(SLEEP_TIME);}catch(InterruptedException ex){ex.printStackTrace();}
                 }
-                if(this.preserver.isPresent()){
-                    this.preserver.get().use();
-                }
-
             }
         }
         this.obstacleCourse.leave(this) ;

@@ -125,7 +125,7 @@ public class ObstacleCourse {
 
         // TODO
         this.waitingLine.add(woolie) ;
-        if((numOnCourse >= maxOnCourse) || (!this.isRunning()) || (!this.waitingLine.get(0).equals(woolie)) || (this.fallenWoolie)){
+        while((numOnCourse >= maxOnCourse) || (!this.isRunning()) || (!this.waitingLine.get(0).equals(woolie)) || (this.fallenWoolie)){
             try{
                 wait();
             }catch(InterruptedException ex){
